@@ -18,8 +18,14 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang='en'>
-        <body className={inter.className}>{children}</body>
+      <html lang='en'
+      
+      >
+        <body className={inter.className}>
+          <main className='flex min-h-screen w-full flex-col item-center dark:bg-black'>
+            {children}
+          </main>
+        </body>
       </html>
     </ClerkProvider>
   )
