@@ -1,9 +1,16 @@
-import { UserButton } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 
-export default function Home() {
+export default async function Home() {
+  const user = await currentUser()
+
+  await new Promise((resolve) => setTimeout(resolve, 3000))
+  console.log(user)
+
   return (
-    <>
-      <h1 className='4xl'>Hello </h1>
-    </>
+    <div className='flex w-full mb-12 items-center space-x-4'>
+      <h1 className='text-4xl font-bold'>
+        Welcome {user?.firstName} {user?.lastName}
+      </h1>
+    </div>
   )
 }
