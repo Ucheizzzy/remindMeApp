@@ -1,3 +1,4 @@
+import CreateCollectionList from '@/components/CreateCollectionList'
 import { currentUser } from '@clerk/nextjs/server'
 
 export default async function Home() {
@@ -11,6 +12,7 @@ export default async function Home() {
       <h1 className='text-4xl font-bold'>
         Welcome {user?.firstName} {user?.lastName}
       </h1>
+      <CreateCollectionList />
     </div>
   )
 }
