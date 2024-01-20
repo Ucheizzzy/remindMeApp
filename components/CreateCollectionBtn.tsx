@@ -7,7 +7,7 @@ export default function CreateCollectionBtn() {
   const [open, setOpen] = useState<boolean>(false)
   const handleOpenChange = (open: boolean) => setOpen(open)
   return (
-    <div className='w-full rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[1px]'>
+    <div className='mt-5 w-full rounded-md bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[1px]'>
       <Button
         variant={'outline'}
         className='dark:text-white w-full dark:bg-neutral-950 bg-white py-5'
