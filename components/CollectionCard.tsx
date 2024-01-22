@@ -1,6 +1,6 @@
 'use client'
 import { Collection, Task } from '@prisma/client'
-import { useState, useTransition } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import CreateTaskDialog from './CreateTaskDialog'
 import { useRouter } from 'next/navigation'
 import {
@@ -11,7 +11,27 @@ import {
 import { Button } from './ui/button'
 import { cn } from '@/lib/utils'
 import { CollectionColor, CollectionColors } from '@/lib/constants'
-import { CaretDownIcon, CaretUpIcon } from '@radix-ui/react-icons'
+import {
+  CaretDownIcon,
+  CaretUpIcon,
+  PlusIcon,
+  TrashIcon,
+} from '@radix-ui/react-icons'
+import { Progress } from './ui/progress'
+import TaskCard from './TaskCard'
+import { Separator } from './ui/separator'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './ui/alert-dialog'
+import { deleteCollection } from '@/actions/collection'
+import { toast } from './ui/use-toast'
 
 type Props = {
   collection: Collection & {
@@ -27,6 +47,28 @@ export default function CollectionCard({ collection }: Props) {
   const [isLoading, startTransition] = useTransition()
 
   const tasks = collection.tasks
+
+  const removeCollection = async () => {
+    try {
+      await deleteCollection(collection.id)
+      toast({
+        title: 'Success',
+        description: 'Collection deleted successfully',
+      })
+      refresh()
+    } catch (error: unknown) {
+      toast({
+        title: 'Error',
+        description: `Cannot deleted collection: ${error}`,
+        variant: 'destructive',
+      })
+    }
+  }
+  const taskDone = useMemo(() => {
+    return collection.tasks.filter((task) => task.done).length
+  }, [collection.tasks])
+  const totalTasks = collection.tasks.length
+  const progress = totalTasks === 0 ? 0 : (taskDone / totalTasks) * 100
   return (
     <>
       <CreateTaskDialog />
@@ -50,7 +92,7 @@ export default function CollectionCard({ collection }: Props) {
           {tasks.length === 0 && (
             <Button
               variant={'ghost'}
-              className='flex items-center justify-center gap-1 p-8 py-22 rounded-none'
+              className='flex items-center justify-center gap-1 p-8 py-12 rounded-none'
               onClick={() => setShowCreateModal(true)}
             >
               <p>There are no tasks yet:</p>
@@ -64,6 +106,56 @@ export default function CollectionCard({ collection }: Props) {
               </span>
             </Button>
           )}
+          {tasks.length > 0 && (
+            <>
+              <Progress className='rounded-none' value={progress} />
+              <div className='p-4 gap-3 flex flex-col'>
+                {tasks.map((task) => (
+                  <TaskCard key={task.id} task={task} />
+                ))}
+              </div>
+            </>
+          )}
+          <Separator />
+          <footer className='h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center'>
+            <p>Created at {collection.createdAt.toLocaleDateString('en-US')}</p>
+            {isLoading && <div>Deleting ...</div>}
+            {!isLoading && (
+              <div>
+                <Button
+                  size={'icon'}
+                  variant={'ghost'}
+                  onClick={() => setShowCreateModal(true)}
+                >
+                  <PlusIcon />
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button size={'icon'} variant={'ghost'}>
+                      <TrashIcon />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogTitle>
+                      Are you absolutely sure?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      you collection and all tasks inside it.
+                    </AlertDialogDescription>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => startTransition(removeCollection)}
+                      >
+                        Proceed
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            )}
+          </footer>
         </CollapsibleContent>
       </Collapsible>
     </>

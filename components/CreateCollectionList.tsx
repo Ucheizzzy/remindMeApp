@@ -35,7 +35,7 @@ export default async function CreateCollectionList() {
   return (
     <>
       <CreateCollectionBtn />
-      <div className='flex flex-col gap-4 mt-6'>
+      <div className='flex flex-col gap-4 mt-6 w-full'>
         {collections.map((collection) => (
           <CollectionCard key={collection.id} collection={collection} />
         ))}
