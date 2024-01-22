@@ -71,7 +71,11 @@ export default function CollectionCard({ collection }: Props) {
   const progress = totalTasks === 0 ? 0 : (taskDone / totalTasks) * 100
   return (
     <>
-      <CreateTaskDialog />
+      <CreateTaskDialog
+        open={showCreateModal}
+        setOpen={setShowCreateModal}
+        collection={collection}
+      />
 
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
