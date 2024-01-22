@@ -49,6 +49,7 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
   }
 
   const onSubmit = async (data: createTaskSchemaType) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     console.log('submitted', data)
   }
   return (
@@ -123,9 +124,6 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
                             mode='single'
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) =>
-                              date < new Date() || date < new Date('1900-01-01')
-                            }
                             initialFocus
                           />
                         </PopoverContent>
