@@ -28,6 +28,8 @@ import { Button } from './ui/button'
 import { format } from 'date-fns'
 import { Calendar } from './ui/calendar'
 import { CalendarIcon, ReloadIcon } from '@radix-ui/react-icons'
+import { createTask } from '@/actions/task'
+import { toast } from './ui/use-toast'
 
 type Props = {
   open: boolean
@@ -49,8 +51,22 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
   }
 
   const onSubmit = async (data: createTaskSchemaType) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000))
-    console.log('submitted', data)
+    try {
+      await createTask(data)
+      toast({
+        title: 'Success',
+        description: 'Task created successfully.',
+      })
+
+      openChangeWrapper(false)
+      refresh()
+    } catch (error: unknown) {
+      toast({
+        title: 'Error',
+        description: 'Cannot create task',
+        variant: 'destructive',
+      })
+    }
   }
   return (
     <Dialog open={open} onOpenChange={openChangeWrapper}>
