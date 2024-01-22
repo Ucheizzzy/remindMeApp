@@ -44,7 +44,10 @@ export default function CreateCollectionSheet({
 }: Props) {
   const form = useForm<createCollectionSchemaType>({
     resolver: zodResolver(createCollectionSchema),
-    defaultValues: {},
+    defaultValues: {
+      name: '',
+      color: '',
+    },
   })
   const { refresh } = useRouter()
   const onSubmit = async (data: createCollectionSchemaType) => {
