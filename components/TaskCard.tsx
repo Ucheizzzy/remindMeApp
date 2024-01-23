@@ -46,7 +46,7 @@ export default function TaskCard({ task }: Props) {
         {task.expiresAt && (
           <p
             className={cn(
-              'text-xs text-neutral-500 dark:text-neutral-400',
+              'text-xs text-neutral-950 dark:text-neutral-400',
               getExpirationColor(task.expiresAt)
             )}
           >

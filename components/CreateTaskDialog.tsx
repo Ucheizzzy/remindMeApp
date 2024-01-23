@@ -127,7 +127,7 @@ export default function CreateTaskDialog({ open, setOpen, collection }: Props) {
                             variant={'outline'}
                             className={cn(
                               'justify-start text-left font-normal w-full',
-                              !field.value && <span>No Expiration Date</span>
+                              !field.value && 'text-zinc-600'
                             )}
                           >
                             <CalendarIcon className='mr-2 h-4 w-4' />
